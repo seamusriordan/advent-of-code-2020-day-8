@@ -1,5 +1,6 @@
 import Instruction.Operation.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class MainTests {
@@ -84,9 +85,12 @@ class MainTests {
         val instructions = listOf(
             Instruction(JMP, 0)
         )
-        val result = runBootCode(instructions)
-
-        assertEquals(0, result)
+        try {
+            runBootCode(instructions)
+            assertTrue(false)
+        } catch (e: AlreadyExecutedException) {
+            assertEquals(0, e.acc)
+        }
     }
 
     @Test
@@ -113,8 +117,11 @@ class MainTests {
             "acc +6"
         )
         val instructions = input.map { Instruction.build(it) }
-        val result = runBootCode(instructions)
-
-        assertEquals(5, result)
+        try {
+            runBootCode(instructions)
+            assertTrue(false)
+        } catch (e: AlreadyExecutedException) {
+            assertEquals(5, e.acc)
+        }
     }
 }

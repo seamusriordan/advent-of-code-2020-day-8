@@ -5,9 +5,40 @@ fun main() {
     val inputLines = File("src/main/resources/input.txt").readLines()
     val instructions = inputLines.map { Instruction.build(it) }
 
-    val acc = runBootCode(instructions)
+    val mutatedInstructions = buildInstructionMutations(instructions)
 
-    println(acc)
+    try {
+        runBootCode(instructions)
+    } catch (e: AlreadyExecutedException) {
+        println("[ALREADY EXECUTED] acc: ${e.acc}")
+    }
+
+    for (mutatedInstructionSet in mutatedInstructions) {
+        try {
+            val acc = runBootCode(mutatedInstructionSet)
+            println("[SUCCESSFUL END] $acc")
+        } catch (e: AlreadyExecutedException) {
+        }
+    }
+}
+
+private fun buildInstructionMutations(
+    instructions: List<Instruction>
+): List<List<Instruction>> {
+    return instructions.indices.map { mutateAtIndex(instructions.toMutableList(), it) }
+}
+
+private fun mutateAtIndex(instructions: MutableList<Instruction>, mutationIndex: Int)
+        : List<Instruction> {
+    val instructionToMutate = instructions[mutationIndex]
+    val mutatedOperation = when (instructionToMutate.operation) {
+        NOP -> JMP
+        JMP -> NOP
+        else -> instructionToMutate.operation
+    }
+
+    instructions[mutationIndex] = Instruction(mutatedOperation, instructionToMutate.value)
+    return instructions
 }
 
 fun runBootCode(instructions: List<Instruction>): Int {
@@ -25,6 +56,10 @@ fun runBootCode(instructions: List<Instruction>): Int {
         val nextState = processInstruction(currentInstruction, acc, position)
         position = nextState.position
         acc = nextState.acc
+    }
+
+    if (alreadyExecutedPositions.contains(position)) {
+        throw AlreadyExecutedException("Already executed", acc)
     }
 
     return acc
