@@ -90,6 +90,16 @@ class MainTests {
     }
 
     @Test
+    internal fun `stops with jmp -1`() {
+        val instructions = listOf(
+            Instruction(JMP, -1)
+        )
+        val result = runBootCode(instructions)
+
+        assertEquals(0, result)
+    }
+
+    @Test
     internal fun `part 1 example`() {
         val input = listOf(
             "nop +0",

@@ -16,8 +16,8 @@ fun runBootCode(instructions: List<Instruction>): Int {
     val alreadyExecutedPositions = mutableListOf<Int>()
 
     while (
-        position < instructions.size &&
-        !alreadyExecutedPositions.contains(position)
+        positionIsInBounds(position, instructions.size) &&
+        positionNotExecuted(position, alreadyExecutedPositions)
     ) {
         val currentInstruction = instructions[position]
         alreadyExecutedPositions.add(position)
@@ -29,6 +29,14 @@ fun runBootCode(instructions: List<Instruction>): Int {
 
     return acc
 }
+
+private fun positionNotExecuted(
+    position: Int,
+    alreadyExecutedPositions: MutableList<Int>
+) = !alreadyExecutedPositions.contains(position)
+
+private fun positionIsInBounds(position: Int, numberOfInstructions: Int) =
+    position in 0 until numberOfInstructions
 
 private fun processInstruction(
     currentInstruction: Instruction,
