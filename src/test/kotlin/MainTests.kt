@@ -78,4 +78,31 @@ class MainTests {
 
         assertEquals(1, result)
     }
+
+    @Test
+    internal fun `stops when instruction is already executed`() {
+        val instructions = listOf(
+            Instruction(JMP, 0)
+        )
+        val result = runBootCode(instructions)
+
+        assertEquals(0, result)
+    }
+
+    @Test
+    internal fun `part 1 example`() {
+        val input = listOf( "nop +0",
+                "acc +1",
+                "jmp +4",
+                "acc +3",
+                "jmp -3",
+                "acc -99",
+                "acc +1",
+                "jmp -4",
+                "acc +6")
+        val instructions = input.map {Instruction.build(it)};
+        val result = runBootCode(instructions)
+
+        assertEquals(5, result)
+    }
 }
