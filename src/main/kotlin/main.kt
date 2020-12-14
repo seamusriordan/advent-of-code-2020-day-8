@@ -1,7 +1,13 @@
 import Instruction.Operation.*
+import java.io.File
 
 fun main() {
-    println("Hello World!")
+    val inputLines = File("src/main/resources/input.txt").readLines()
+    val instructions = inputLines.map{Instruction.build(it)}
+
+    val acc = runBootCode(instructions)
+
+    println(acc)
 }
 
 fun runBootCode(instructions: List<Instruction>): Int {
@@ -23,7 +29,6 @@ fun runBootCode(instructions: List<Instruction>): Int {
         }
         position += 1
     }
-
 
     return acc
 }
