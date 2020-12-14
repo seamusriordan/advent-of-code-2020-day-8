@@ -5,9 +5,19 @@ fun main() {
 }
 
 fun runBootCode(instructions: List<Instruction>): Int {
-    return instructions.filter {
-        it.operation == ACC
-    }.map {
-        it.value
-    }.sum()
+    var acc = 0
+    var position = 0
+
+    while(position < instructions.size){
+        val currentInstruction = instructions[position]
+        when(currentInstruction.operation) {
+            ACC -> acc += currentInstruction.value
+            JMP -> position += currentInstruction.value - 1
+            else -> {}
+        }
+        position += 1
+    }
+
+
+    return acc
 }
