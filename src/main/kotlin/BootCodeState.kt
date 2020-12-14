@@ -1,0 +1,1 @@
+class BootCodeState(val position: Int, val acc: Int)
